@@ -80,7 +80,7 @@
       "frameIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     },
     {
-      "assetPath": "shared:characters/NENE/love",
+      "assetPath": "shared:characters/nene/love",
       "name": "huh",
       "prefix": "huh",
       "offsets": [-9, -6],
@@ -90,7 +90,7 @@
       }
     },
     {
-      "asset": "shared:characters/NENE/love",
+      "asset": "shared:characters/nene/love",
       "name": "idle-alt",
       "prefix": "love",
       "offsets": [-9, -6],
