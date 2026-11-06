@@ -91,7 +91,7 @@
       "offsets": [138, 168]
     },
     {
-      "assetPath": "shared:characters/PICO/all",
+      "assetPath": "shared:characters/pico/all",
       "name": "preDance",
       "prefix": "pre dance",
       "offsets": [55, 16.87]
@@ -113,25 +113,25 @@
       ]
     },
     {
-      "assetPath": "shared:characters/PICO/all",
+      "assetPath": "shared:characters/pico/all",
       "name": "introbl",
       "prefix": "blissful intro",
       "offsets": [55, 16.87]
     },
     {
-      "assetPath": "shared:characters/PICO/all",
+      "assetPath": "shared:characters/pico/all",
       "name": "introbl-easter",
       "prefix": "easter egg",
       "offsets": [55, 16.87]
     },
     {
-      "assetPath": "shared:characters/PICO/all",
+      "assetPath": "shared:characters/pico/all",
       "name": "cough",
       "prefix": "cough",
       "offsets": [55, 16.87]
     },
     {
-      "assetPath": "shared:characters/PICO/all",
+      "assetPath": "shared:characters/pico/all",
       "name": "burp-long",
       "prefix": "burp blissful",
       "offsets": [55, 16.87]
