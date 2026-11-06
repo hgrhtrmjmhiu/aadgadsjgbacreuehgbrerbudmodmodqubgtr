@@ -185,7 +185,7 @@
       "looped": false,
       "name": "firstDeath-saw",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf_saw_death",
+      "assetPath": "shared:characters/bf/bf_saw_death",
       "frameRate": 24,
       "atlasSettings": {
         "uniqueInCache": true
@@ -193,7 +193,7 @@
     },
     {
       "offsets": [420, 62],
-      "asset": "shared:characters/BF/bf_saw_death",
+      "asset": "shared:characters/bf/bf_saw_death",
       "prefix": "bf dead loop",
       "animType": "framelabel",
       "flipX": false,
@@ -207,7 +207,7 @@
     },
     {
       "offsets": [420, 62],
-      "asset": "shared:characters/BF/bf_saw_death",
+      "asset": "shared:characters/bf/bf_saw_death",
       "prefix": "bf undeading",
       "animType": "framelabel",
       "flipX": false,
@@ -227,7 +227,7 @@
       "looped": false,
       "name": "preDance",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt",
+      "assetPath": "shared:characters/bf/bf-qt",
       "frameRate": 24,
       "atlasSettings": {
         "uniqueInCache": true
@@ -235,7 +235,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "dance",
       "frameIndices": [14, 15, 16, 17, 18, 19, 0, 1, 2, 3],
       "animType": "framelabel",
@@ -250,7 +250,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "dance",
       "frameIndices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
       "animType": "framelabel",
@@ -265,7 +265,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "obliterated intro",
       "animType": "framelabel",
       "flipX": false,
@@ -279,7 +279,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "dodge back",
       "animType": "framelabel",
       "flipX": false,
@@ -293,7 +293,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "dodge",
       "animType": "framelabel",
       "flipX": false,
@@ -307,7 +307,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "hurt back",
       "animType": "framelabel",
       "flipX": false,
@@ -321,7 +321,7 @@
     },
     {
       "offsets": [67, -51],
-      "asset": "shared:characters/BF/bf-qt",
+      "asset": "shared:characters/bf/bf-qt",
       "prefix": "hurt",
       "animType": "framelabel",
       "flipX": false,
@@ -335,7 +335,7 @@
     },
     {
       "offsets": [-3, -65],
-      "prefix": "fake out death BF",
+      "prefix": "fake out death bf",
       "flipX": false,
       "looped": false,
       "name": "fakeoutDeath",
@@ -362,7 +362,7 @@
       "looped": false,
       "name": "singLEFT-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -373,7 +373,7 @@
       "looped": false,
       "name": "singRIGHT-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -384,7 +384,7 @@
       "looped": false,
       "name": "singUP-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -395,7 +395,7 @@
       "looped": false,
       "name": "singDOWN-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -406,7 +406,7 @@
       "looped": false,
       "name": "singLEFTmiss-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -417,7 +417,7 @@
       "looped": false,
       "name": "singRIGHTmiss-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -428,7 +428,7 @@
       "looped": false,
       "name": "singUPmiss-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -439,7 +439,7 @@
       "looped": false,
       "name": "singDOWNmiss-caramella",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -450,7 +450,7 @@
       "looped": false,
       "name": "superHey",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -461,7 +461,7 @@
       "looped": false,
       "name": "shoulderSwish",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     },
     {
@@ -472,7 +472,7 @@
       "looped": false,
       "name": "tired",
       "flipY": false,
-      "assetPath": "shared:characters/BF/bf-qt-erect",
+      "assetPath": "shared:characters/bf/bf-qt-erect",
       "frameRate": 24
     }
   ]
