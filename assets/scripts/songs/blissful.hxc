@@ -159,7 +159,7 @@ class BlissfulSongScript extends Song
 
     var destination:FlxGroup = hide ? carryOverPopUps : discardedPopUps;
     pruneDeadPopUps(destination);
-    for (popUp in ps.comboPopUps.members.copy())
+    for (popUp in copyMembers(ps.comboPopUps))
     {
       if (popUp == null || !popUp.exists) continue;
       ps.comboPopUps.remove(popUp, true);
@@ -169,9 +169,16 @@ class BlissfulSongScript extends Song
     ps.comboPopUps.visible = !hide;
   }
 
+  function copyMembers(group:FlxGroup):Array<Dynamic>
+  {
+    var result:Array<Dynamic> = [];
+    for (member in group.members) result.push(member);
+    return result;
+  }
+
   function pruneDeadPopUps(group:FlxGroup):Void
   {
-    for (popUp in group.members.copy())
+    for (popUp in copyMembers(group))
     {
       if (popUp != null && !popUp.exists) group.remove(popUp, true);
     }
