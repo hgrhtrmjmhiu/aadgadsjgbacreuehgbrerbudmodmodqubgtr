@@ -13,7 +13,9 @@ import funkin.save.Save;
 import funkin.modding.PolymodHandler;
 import funkin.util.FileUtil;
 import funkin.Paths;
+#if !html5
 import funkin.graphics.video.FunkinVideoSprite;
+#end
 import lime.app.Application;
 import funkin.play.cutscene.VideoCutscene;
 import funkin.play.PlayStatePlaylist;
@@ -31,7 +33,7 @@ class ObliteratedSongScript extends Song
   var cutsceneSfx:FunkinSound;
   var tweens = [];
   var pausedTweens = [];
-  var midVideo:FunkinVideoSprite;
+  var midVideo = null;
   var _currentChange:String;
   var hasDanced:Bool = false;
 
@@ -85,6 +87,7 @@ class ObliteratedSongScript extends Song
 
   private function setupMidVideo():Void
   {
+  #if !html5
     if (midVideo != null)
     {
       midVideo.stop();
@@ -117,6 +120,7 @@ class ObliteratedSongScript extends Song
 
       PlayState.instance.currentStage.add(midVideo);
     }
+    #end
   }
 
   override function onPause(event:PauseScriptEvent):Void
@@ -188,7 +192,9 @@ class ObliteratedSongScript extends Song
     results.push(Paths.sound('alert'));
     results.push(Paths.sound('attack'));
     results.push(Paths.image("ui/popup/funkin/dodged"));
+    #if !html5
     results.push(Paths.videos('cutscene'));
+    #end
 
     return results;
   }
