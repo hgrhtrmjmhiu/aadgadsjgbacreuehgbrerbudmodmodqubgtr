@@ -174,12 +174,13 @@ class ObliteratedSongScript extends Song
     FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
     PlayState.instance.currentStage.getNamedProp('blackScreenVideo').alpha = 0;
 
+    isOnVideo = false;
+
     if (midVideo != null)
     {
       midVideo.bitmap.time = 0;
       midVideo.pause();
       midVideo.visible = false;
-      isOnVideo = false;
     }
   }
 
@@ -280,38 +281,42 @@ class ObliteratedSongScript extends Song
     switch (event.eventData.eventKind)
     {
       case "cutsceneVideo":
+        isOnVideo = true;
+
         if (midVideo != null)
         {
-          isOnVideo = true;
           midVideo.cameras = [PlayState.instance.camHUD];
           midVideo.visible = true;
           midVideo.resume();
-          FlxTween.tween(PlayState.instance.playerStrumline,
-            {
-              alpha: 0.67
-            }, 2,
-            {
-              ease: FlxEase.quadInOut
-            });
         }
 
+        FlxTween.tween(PlayState.instance.playerStrumline,
+          {
+            alpha: 0.67
+          }, 2,
+          {
+            ease: FlxEase.quadInOut
+          });
+
       case "cutsceneVideoOut":
+        isOnVideo = false;
+
         if (midVideo != null)
         {
-          isOnVideo = false;
           midVideo.stop();
           midVideo.visible = false;
-          hudAlpha(1, true);
-          FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
-          PlayState.instance.currentStage.getNamedProp('blackScreenVideo').alpha = 0;
-          FlxTween.tween(PlayState.instance.playerStrumline,
-            {
-              alpha: 1
-            }, 1,
-            {
-              ease: FlxEase.quadInOut
-            });
         }
+
+        hudAlpha(1, true);
+        FlxTween.cancelTweensOf(PlayState.instance.currentStage.getNamedProp('blackScreenVideo'));
+        PlayState.instance.currentStage.getNamedProp('blackScreenVideo').alpha = 0;
+        FlxTween.tween(PlayState.instance.playerStrumline,
+          {
+            alpha: 1
+          }, 1,
+          {
+            ease: FlxEase.quadInOut
+          });
 
       case "fadeStart":
         hudAlpha(0, false);
