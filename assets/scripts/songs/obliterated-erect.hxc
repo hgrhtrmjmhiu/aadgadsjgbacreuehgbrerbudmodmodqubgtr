@@ -1,6 +1,8 @@
 import funkin.play.song.Song;
 import funkin.play.PlayState;
+#if !html5
 import funkin.graphics.video.FunkinVideoSprite;
+#end
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.shaders.DropShadowShader;
 import funkin.graphics.shaders.AdjustColorShader;
@@ -17,12 +19,14 @@ import funkin.audio.FunkinSound;
 
 class ObliteratedErectSong extends Song
 {
-  var huzzVideo:FunkinVideoSprite;
-  var editVideo:FunkinVideoSprite;
+  var huzzVideo = null;
+  var editVideo = null;
   var inGhost:Bool = true;
   var shouldPlayEdit:Bool = false;
   var shouldHuzz:Bool = false;
   var colorShader:AdjustColorShader;
+  var timeEditEnd:Float = 178767;
+  var editEndTriggered:Bool = false;
   var timeVideo1:Float = 149673;
   var timeVideo2:Float = 153800;
   var timeFadeOut1Start:Float = 148300;
@@ -64,6 +68,7 @@ class ObliteratedErectSong extends Song
     super.onCreate(event);
     inGhost = true;
 
+    #if !html5
     huzzVideo = new FunkinVideoSprite(0, 0);
     huzzVideo.load(Paths.videos('obliteratedErectMid'));
 
@@ -110,6 +115,7 @@ class ObliteratedErectSong extends Song
     huzzVideo.pause();
     editVideo.play();
     editVideo.pause();
+    #end
 
     PlayState.instance.currentStage.refresh();
     // setupFocusHandling();
@@ -149,6 +155,7 @@ class ObliteratedErectSong extends Song
     camFade2Triggered = false;
     camFade3Triggered = false;
     camFade4Triggered = false;
+    editEndTriggered = false;
   }
 
   override function onPause(event:PauseScriptEvent):Void
@@ -168,12 +175,18 @@ class ObliteratedErectSong extends Song
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
-    huzzVideo.bitmap.time = 0;
-    huzzVideo.pause();
-    huzzVideo.visible = false;
-    editVideo.bitmap.time = 0;
-    editVideo.pause();
-    editVideo.visible = false;
+    if (huzzVideo != null)
+    {
+      huzzVideo.bitmap.time = 0;
+      huzzVideo.pause();
+      huzzVideo.visible = false;
+    }
+    if (editVideo != null)
+    {
+      editVideo.bitmap.time = 0;
+      editVideo.pause();
+      editVideo.visible = false;
+    }
 
     shouldHuzz = false;
     shouldPlayEdit = false;
@@ -188,6 +201,7 @@ class ObliteratedErectSong extends Song
     camFade2Triggered = false;
     camFade3Triggered = false;
     camFade4Triggered = false;
+    editEndTriggered = false;
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
     #if !mobile
@@ -199,8 +213,8 @@ class ObliteratedErectSong extends Song
   {
     super.onGameOver(event);
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
-    huzzVideo.visible = false;
-    editVideo.visible = false;
+    if (huzzVideo != null) huzzVideo.visible = false;
+    if (editVideo != null) editVideo.visible = false;
     introSfx?.stop();
     endingSfx?.stop();
   }
@@ -321,25 +335,40 @@ class ObliteratedErectSong extends Song
     if (!video1Triggered && currentTime >= timeVideo1 && currentTime < timeVideo2)
     {
       video1Triggered = true;
-      huzzVideo.visible = true;
-      huzzVideo.bitmap.time = 0;
-      huzzVideo.resume();
-      shouldHuzz = true;
-      // PlayState.instance.mayPauseGame = false;
+      if (huzzVideo != null)
+      {
+        huzzVideo.visible = true;
+        huzzVideo.bitmap.time = 0;
+        huzzVideo.resume();
+        shouldHuzz = true;
+      }
     }
 
     if (!video2Triggered && currentTime >= timeVideo2)
     {
       video2Triggered = true;
 
-      huzzVideo.pause();
-      huzzVideo.visible = false;
-      shouldHuzz = false;
+      if (huzzVideo != null)
+      {
+        huzzVideo.pause();
+        huzzVideo.visible = false;
+        shouldHuzz = false;
+      }
 
-      editVideo.visible = true;
-      editVideo.bitmap.time = 0;
-      editVideo.resume();
-      shouldPlayEdit = true;
+      if (editVideo != null)
+      {
+        editVideo.visible = true;
+        editVideo.bitmap.time = 0;
+        editVideo.resume();
+        shouldPlayEdit = true;
+      }
+    }
+
+    if (editVideo == null && !editEndTriggered && currentTime >= timeEditEnd)
+    {
+      editEndTriggered = true;
+      PlayState.instance.currentStage.getDad().playAnimation('tsundere', true, true);
+      inGhost = true;
     }
 
     #if mobile
