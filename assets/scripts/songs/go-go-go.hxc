@@ -364,10 +364,6 @@ class GoGoGoSong extends Song
     line.play();
   }
 
-    if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/introGoGoGo/${introTimeline[index].line}', line);
-    line.play();
-  }
-
   function endIntro()
   {
     PlayState.instance.camHUD.alpha = 0;
