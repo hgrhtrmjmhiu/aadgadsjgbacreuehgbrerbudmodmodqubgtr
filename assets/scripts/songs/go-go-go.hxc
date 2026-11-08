@@ -361,13 +361,8 @@ class GoGoGoSong extends Song
     var line:FunkinSound = introLines[index];
     if (line == null) return;
 
-    line.onComplete = () -> {
-      if (Preferences.subtitles && PlayState.instance.subtitles.assignedSound == line)
-      {
-        PlayState.instance.subtitles.assignedSound = null;
-        PlayState.instance.subtitles.setText([], true);
-      }
-    };
+    line.play();
+  }
 
     if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/introGoGoGo/${introTimeline[index].line}', line);
     line.play();
@@ -375,12 +370,6 @@ class GoGoGoSong extends Song
 
   function endIntro()
   {
-    if (Preferences.subtitles)
-    {
-      PlayState.instance.subtitles.assignedSound = null;
-      PlayState.instance.subtitles.setText([], true);
-    }
-
     PlayState.instance.camHUD.alpha = 0;
     PlayState.instance.camHUD.visible = true;
     FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1, {ease: FlxEase.smoothStepInOut});
