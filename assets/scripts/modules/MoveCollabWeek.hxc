@@ -25,7 +25,9 @@ class MoveCollabWeek extends Module
   {
     var state = FlxG.state;
     var levels = [];
-    for (item in state.levelList.copy())
+    var levelListCopy = [];
+    for (item in state.levelList) levelListCopy.push(item);
+    for (item in levelListCopy)
     {
       if (songs.contains(item))
       {
