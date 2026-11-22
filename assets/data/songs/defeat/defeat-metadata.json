@@ -23,7 +23,7 @@
     "bf-defeat-normal"
    ]
   },
-  "stage": "defeat1",
+  "stage": "void",
   "noteStyle": "vs-impostor-legacy",
   "ratings": {
    "easy": 15,
