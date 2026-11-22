@@ -8,10 +8,7 @@
     "scale": 1,
     "isPixel": false,
     "startingAnimation": "idle",
-    "offsets": [
-        -215.2,
-        -11.3
-    ],
+    "offsets": [-215.2, 0],
     "animations": [
         {
             "name": "idle",
