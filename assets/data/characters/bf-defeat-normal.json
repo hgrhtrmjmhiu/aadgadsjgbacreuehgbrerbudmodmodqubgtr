@@ -7,71 +7,120 @@
     "isPixel": false,
     "flipX": true,
     "startingAnimation": "idle",
+    "offsets": [
+        -4.0,
+        9.5
+    ],
     "animations": [
         {
             "name": "idle",
             "prefix": "idle",
             "frameRate": 24,
-            "looped": true
+            "looped": true,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singLEFT",
             "prefix": "left",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singDOWN",
             "prefix": "down",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                1
+            ]
         },
         {
             "name": "singUP",
             "prefix": "up",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singRIGHT",
             "prefix": "right",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singLEFTmiss",
-            "prefix": "left miss"
+            "prefix": "left miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singDOWNmiss",
-            "prefix": "down miss"
+            "prefix": "down miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singUPmiss",
-            "prefix": "up miss"
+            "prefix": "up miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singRIGHTmiss",
-            "prefix": "right miss"
+            "prefix": "right miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "assetPath": "shared:characters/gameover/bfdefeatgameovers",
             "name": "firstDeath",
             "prefix": "BF dies",
-            "offsets": [940, -20]
+            "offsets": [
+                940,
+                -20
+            ]
         },
         {
             "assetPath": "shared:characters/gameover/bfdefeatgameovers",
             "name": "deathLoop",
             "prefix": "BF Dead Loop",
             "looped": true,
-            "offsets": [940, -20]
+            "offsets": [
+                940,
+                -20
+            ]
         },
         {
             "assetPath": "shared:characters/gameover/bfdefeatgameovers",
             "name": "deathConfirm",
             "prefix": "BF Dead confirm",
-            "offsets": [940, -20]
+            "offsets": [
+                940,
+                -20
+            ]
         }
     ]
 }

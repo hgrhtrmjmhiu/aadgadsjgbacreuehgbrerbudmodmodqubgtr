@@ -265,6 +265,27 @@ class ChangeCharacterEventDefeat extends SongEvent
   }
   // <<< TERMINA LO NUEVO
 
+  // Igual que hace Stage.addCharacter: sin esto originalPosition queda en (0,0) y el foco de cámara
+  // (resetCameraFocusPoint) y el reinicio (resetStage) usan una posición equivocada.
+  function finalizeCamera(character:BaseCharacter, stageCharData):Void
+  {
+    try
+    {
+      character.originalPosition.set(character.x, character.y);
+      character.resetCameraFocusPoint();
+
+      if (stageCharData != null && stageCharData.cameraOffsets != null)
+      {
+        character.cameraFocusPoint.x += stageCharData.cameraOffsets[0];
+        character.cameraFocusPoint.y += stageCharData.cameraOffsets[1];
+      }
+    }
+    catch (e:Dynamic)
+    {
+      trace('[ChangeCharacterEvent] finalizeCamera() falló: ' + e);
+    }
+  }
+
   function changeCharacter(role:String, newChar:String, daX:Float = 0, daY:Float = 0):Void
   {
     var newCharacter:BaseCharacter = getOrFetchCharacter(newChar);
@@ -310,6 +331,7 @@ class ChangeCharacterEventDefeat extends SongEvent
         // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.dance(true);)
         safeDance(newCharacter, newChar);
         // <<< TERMINA LO NUEVO
+        finalizeCamera(newCharacter, charactersData != null ? charactersData.bf : null);
         PlayState.instance.currentStage.characters.set('bf', newCharacter);
         // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.initHealthIcon(false);)
         safeInitHealthIcon(newCharacter, newChar, false);
@@ -351,6 +373,7 @@ class ChangeCharacterEventDefeat extends SongEvent
         // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.dance(true);)
         safeDance(newCharacter, newChar);
         // <<< TERMINA LO NUEVO
+        finalizeCamera(newCharacter, charactersData != null ? charactersData.dad : null);
         PlayState.instance.currentStage.characters.set('dad', newCharacter);
         // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.initHealthIcon(true);)
         safeInitHealthIcon(newCharacter, newChar, true);
@@ -392,6 +415,7 @@ class ChangeCharacterEventDefeat extends SongEvent
         // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.dance(true);)
         safeDance(newCharacter, newChar);
         // <<< TERMINA LO NUEVO
+        finalizeCamera(newCharacter, charactersData != null ? charactersData.gf : null);
         PlayState.instance.currentStage.characters.set('gf', newCharacter);
     }
 

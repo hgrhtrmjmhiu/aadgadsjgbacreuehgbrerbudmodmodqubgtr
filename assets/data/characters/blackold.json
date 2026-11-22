@@ -2,40 +2,71 @@
     "version": "1.0.1",
     "name": "blackold",
     "renderType": "multianimateatlas",
+    "danceEvery": 1,
     "assetPath": "shared:characters/story/black/retro",
+    "singTime": 3.1,
     "scale": 1,
     "isPixel": false,
     "startingAnimation": "idle",
+    "offsets": [
+        -215.2,
+        -11.3
+    ],
     "animations": [
         {
             "name": "idle",
             "prefix": "BLACK IDLE",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": true
+            "looped": true,
+            "offsets": [
+                59,
+                -79
+            ]
         },
         {
             "name": "singLEFT",
             "prefix": "BLACK LEFT",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                176,
+                -70
+            ]
         },
         {
             "name": "singDOWN",
             "prefix": "BLACK DOWN",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                89,
+                -120
+            ]
         },
         {
             "name": "singUP",
             "prefix": "BLACK UP",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                100,
+                50
+            ]
         },
         {
             "name": "singRIGHT",
             "prefix": "BLACK RIGHT",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                -172,
+                -74
+            ]
         }
     ]
 }

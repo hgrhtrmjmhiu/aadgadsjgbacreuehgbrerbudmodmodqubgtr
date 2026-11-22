@@ -21,13 +21,6 @@
    }
   },
   {
-   "t": 0,
-   "e": "ChangeStageDefeat",
-   "v": {
-    "stageid": "defeat1"
-   }
-  },
-  {
    "t": 37.5,
    "e": "FocusCamera",
    "v": {
@@ -118,13 +111,6 @@
     "newchar": "bf-defeat-scared",
     "x": 0,
     "y": 0
-   }
-  },
-  {
-   "t": 20400,
-   "e": "ChangeStageDefeat",
-   "v": {
-    "stageid": "defeat2"
    }
   },
   {
@@ -320,13 +306,6 @@
    }
   },
   {
-   "t": 87600,
-   "e": "ChangeStageDefeat",
-   "v": {
-    "stageid": "defeat3"
-   }
-  },
-  {
    "t": 106800,
    "e": "ZoomCamera",
    "v": {
@@ -391,13 +370,6 @@
     "widescreenScaleX": 0,
     "widescreenScaleY": 0,
     "zoom": 0.6
-   }
-  },
-  {
-   "t": 108000,
-   "e": "ChangeStageDefeat",
-   "v": {
-    "stageid": "defeat2"
    }
   },
   {

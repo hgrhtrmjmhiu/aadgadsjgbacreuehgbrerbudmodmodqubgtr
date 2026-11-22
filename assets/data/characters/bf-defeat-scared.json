@@ -7,77 +7,130 @@
     "isPixel": false,
     "flipX": true,
     "startingAnimation": "idle",
+    "offsets": [
+        -0.5,
+        0
+    ],
     "animations": [
         {
             "name": "idle",
             "prefix": "fear idle",
             "frameRate": 24,
-            "looped": true
+            "looped": true,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "idle-loop",
             "prefix": "fear idle loop",
             "frameRate": 24,
-            "looped": true
+            "looped": true,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singLEFT",
             "prefix": "fear left",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singDOWN",
             "prefix": "fear down",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singUP",
             "prefix": "fear up",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singRIGHT",
             "prefix": "fear right",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singLEFTmiss",
-            "prefix": "fear left miss"
+            "prefix": "fear left miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singDOWNmiss",
-            "prefix": "fear down miss"
+            "prefix": "fear down miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singUPmiss",
-            "prefix": "fear up miss"
+            "prefix": "fear up miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "name": "singRIGHTmiss",
-            "prefix": "fear right miss"
+            "prefix": "fear right miss",
+            "offsets": [
+                0,
+                0
+            ]
         },
         {
             "assetPath": "shared:characters/gameover/bfdefeatgameovers",
             "name": "firstDeath",
             "prefix": "BF dies",
-            "offsets": [1000, -20]
+            "offsets": [
+                1000,
+                -20
+            ]
         },
         {
             "assetPath": "shared:characters/gameover/bfdefeatgameovers",
             "name": "deathLoop",
             "prefix": "BF Dead Loop",
             "looped": true,
-            "offsets": [1000, -20]
+            "offsets": [
+                1000,
+                -20
+            ]
         },
         {
             "assetPath": "shared:characters/gameover/bfdefeatgameovers",
             "name": "deathConfirm",
             "prefix": "BF Dead confirm",
-            "offsets": [1000, -20]
+            "offsets": [
+                1000,
+                -20
+            ]
         }
     ]
 }

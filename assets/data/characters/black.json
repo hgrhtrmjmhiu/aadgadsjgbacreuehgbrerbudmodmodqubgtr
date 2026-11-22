@@ -1,53 +1,92 @@
 {
     "version": "1.0.1",
     "name": "black",
-    "renderType": "multianimateatlas",
+    "renderType": "animateatlas",
+    "danceEvery": 1,
     "assetPath": "shared:characters/story/black/black",
+    "singTime": 3.1,
     "scale": 1,
     "isPixel": false,
     "startingAnimation": "idle",
+    "offsets": [
+        0,
+        0
+    ],
     "animations": [
         {
             "name": "idle",
             "prefix": "black idle remast",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": true
+            "looped": true,
+            "offsets": [
+                365,
+                29
+            ]
         },
         {
             "name": "singLEFT",
             "prefix": "black left",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                591,
+                -18
+            ]
         },
         {
             "name": "singDOWN",
             "prefix": "black down",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                571,
+                280
+            ]
         },
         {
             "name": "singUP",
             "prefix": "black up",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                641,
+                41
+            ]
         },
         {
             "name": "singRIGHT",
             "prefix": "black right",
+            "animType": "symbol",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                352,
+                -27
+            ]
         },
         {
             "name": "kill",
             "prefix": "kill1",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                632,
+                341
+            ]
         },
         {
             "name": "kill2",
             "prefix": "kill2",
             "frameRate": 24,
-            "looped": false
+            "looped": false,
+            "offsets": [
+                631,
+                341
+            ]
         }
     ]
 }
