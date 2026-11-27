@@ -21,7 +21,6 @@ class FlashScreenEventDefeat extends SongEvent
     var color = data.getString('color') ?? 'FFFFFF';
     var duration = data.getFloat('duration') ?? 0.5;
 
-    // Hace parpadear la pantalla
     FlxG.camera.flash(FlxColor.fromString('#$color'), duration);
   }
 

@@ -15,13 +15,7 @@
   "characters": {
    "player": "bf-defeat-normal",
    "girlfriend": "gfinvisible",
-   "opponent": "black",
-   "opponentVocals": [
-    "black"
-   ],
-   "playerVocals": [
-    "bf-defeat-normal"
-   ]
+   "opponent": "black"
   },
   "stage": "void",
   "noteStyle": "vs-impostor-legacy",

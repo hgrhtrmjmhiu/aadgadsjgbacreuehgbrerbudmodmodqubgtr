@@ -2,18 +2,6 @@ import funkin.play.PlayState;
 import funkin.play.character.AnimateAtlasCharacter;
 import funkin.Conductor;
 
-/**
- * Personaje "black" con el efecto de hold estilo NightmareVision.
- *
- * Mientras black (como oponente) mantiene una nota sostenida, su animación
- * de canto se reinicia una vez por step. Si el personaje tiene una animación
- * "singX-hold", no se hace nada (V-Slice ya la usa por su cuenta).
- *
- * OJO con los nombres: este script es una clase que hereda de un personaje,
- * que tiene MUCHOS campos propios (anim, id, x, y, scale...). Una variable
- * local con el mismo nombre que un campo puede sobrescribirlo y romper cosas.
- * Por eso todo lo mío lleva el prefijo "fx".
- */
 class BlackDefeatCharacter extends AnimateAtlasCharacter
 {
   public function new()
@@ -21,7 +9,6 @@ class BlackDefeatCharacter extends AnimateAtlasCharacter
     super('black');
   }
 
-  // Seguimiento del hold del oponente.
   var fxHoldActual:Dynamic = null;
   var fxHoldStrumTime:Float = -1;
   var fxSiguienteMs:Float = 0;
@@ -37,24 +24,20 @@ class BlackDefeatCharacter extends AnimateAtlasCharacter
     }
     catch (fxErr:Dynamic)
     {
-      // Si algo falla aquí, no tumbar la canción: avisar una sola vez.
       if (!fxErrorAvisado)
       {
         fxErrorAvisado = true;
-        trace('[BlackDefeatCharacter] error en el efecto de hold: ' + fxErr);
       }
     }
   }
 
   function fxActualizarHold():Void
   {
-    // Fuera de partida (editores) no hay nada que hacer.
     if (this.debug) return;
 
     var fxPs = PlayState.instance;
     if (fxPs == null) return;
 
-    // Solo cuando black es el oponente.
     if (Std.string(this.characterType) != 'DAD')
     {
       fxHoldActual = null;
@@ -68,8 +51,6 @@ class BlackDefeatCharacter extends AnimateAtlasCharacter
       return;
     }
 
-    // Hold activo del oponente (misma condición que usa PlayState).
-    // Si hay varios a la vez, se toma el más reciente.
     var fxActivo:Dynamic = null;
     for (fxH in fxLinea.holdNotes.members)
     {
@@ -88,12 +69,8 @@ class BlackDefeatCharacter extends AnimateAtlasCharacter
 
     var fxStepMs:Float = Conductor.instance.stepLengthMs;
 
-    // Protección: si el step no es un número válido, no hacer nada (evita bucles).
     if (!(fxStepMs > 0)) return;
 
-    // Hold nuevo (o sprite reciclado para otra nota): arrancar el reloj.
-    // El primer golpe ya lo reprodujo la nota normal, así que el primer
-    // reinicio es un step después.
     if (fxActivo != fxHoldActual || fxActivo.strumTime != fxHoldStrumTime)
     {
       fxHoldActual = fxActivo;
@@ -105,7 +82,6 @@ class BlackDefeatCharacter extends AnimateAtlasCharacter
 
     var fxAnimActual:String = getCurrentAnimation();
 
-    // Si existe la animación "-hold", V-Slice ya la usa solo.
     if (fxAnimActual.indexOf('-hold') != -1) return;
     if (hasAnimation(fxAnimActual + '-hold')) return;
 
@@ -115,7 +91,6 @@ class BlackDefeatCharacter extends AnimateAtlasCharacter
       playAnimation(fxAnimActual, true);
       holdTimer = 0;
 
-      // Avanzar el reloj (por si hubo un lag y nos saltamos varios steps).
       while (fxSiguienteMs <= fxPosMs) fxSiguienteMs += fxStepMs;
     }
   }

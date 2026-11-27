@@ -128,72 +128,72 @@
       "isPixel": false
     },
     "judgementSick": {
-      "assetPath": "default:ui/popup/defeat/sussy",
+      "assetPath": "default:ui/popup/impostor-legacy/sussy",
       "scale": 0.60,
       "isPixel": false
     },
     "judgementGood": {
-      "assetPath": "default:ui/popup/funkin/good",
-      "scale": 0.65,
+      "assetPath": "default:ui/popup/impostor-legacy/good",
+      "scale": 0.60,
       "isPixel": false
     },
     "judgementBad": {
-      "assetPath": "default:ui/popup/funkin/bad",
-      "scale": 0.65,
+      "assetPath": "default:ui/popup/impostor-legacy/bad",
+      "scale": 0.60,
       "isPixel": false
     },
     "judgementShit": {
-      "assetPath": "default:ui/popup/funkin/shit",
-      "scale": 0.65,
+      "assetPath": "default:ui/popup/impostor-legacy/shit",
+      "scale": 0.60,
       "isPixel": false
     },
     "comboNumber0": {
-      "assetPath": "default:ui/popup/funkin/num0",
+      "assetPath": "default:ui/popup/impostor-legacy/num0",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber1": {
-      "assetPath": "default:ui/popup/funkin/num1",
+      "assetPath": "default:ui/popup/impostor-legacy/num1",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber2": {
-      "assetPath": "default:ui/popup/funkin/num2",
+      "assetPath": "default:ui/popup/impostor-legacy/num2",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber3": {
-      "assetPath": "default:ui/popup/funkin/num3",
+      "assetPath": "default:ui/popup/impostor-legacy/num3",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber4": {
-      "assetPath": "default:ui/popup/funkin/num4",
+      "assetPath": "default:ui/popup/impostor-legacy/num4",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber5": {
-      "assetPath": "default:ui/popup/funkin/num5",
+      "assetPath": "default:ui/popup/impostor-legacy/num5",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber6": {
-      "assetPath": "default:ui/popup/funkin/num6",
+      "assetPath": "default:ui/popup/impostor-legacy/num6",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber7": {
-      "assetPath": "default:ui/popup/funkin/num7",
+      "assetPath": "default:ui/popup/impostor-legacy/num7",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber8": {
-      "assetPath": "default:ui/popup/funkin/num8",
+      "assetPath": "default:ui/popup/impostor-legacy/num8",
       "isPixel": false,
       "scale": 0.45
     },
     "comboNumber9": {
-      "assetPath": "default:ui/popup/funkin/num9",
+      "assetPath": "default:ui/popup/impostor-legacy/num9",
       "isPixel": false,
       "scale": 0.45
     }

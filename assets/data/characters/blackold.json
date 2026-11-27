@@ -64,6 +64,14 @@
                 -172,
                 -74
             ]
+        },
+        {
+            "name": "death",
+            "prefix": "BLACK DEATH",
+            "animType": "symbol",
+            "frameRate": 24,
+            "looped": false,
+            "offsets": [329, 142]
         }
     ]
 }

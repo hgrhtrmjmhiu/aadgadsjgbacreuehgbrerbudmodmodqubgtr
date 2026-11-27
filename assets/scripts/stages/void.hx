@@ -15,32 +15,28 @@ import funkin.util.FlxTweenUtil;
 import funkin.play.character.BaseCharacter;
 import funkin.play.character.CharacterType;
 import openfl.display.BlendMode;
+import funkin.graphics.FunkinSprite;
+import funkin.data.notestyle.NoteStyleRegistry;
 
 class VoidStage extends Stage
 {
   static inline var FADE_TIME:Float = 0.5;
   static inline var SCENE_DURATION:Float = 3.3;
 
-  // >>> FASES DEL STAGE "void" Y PULSO POR BEAT (portado de defeat.hx de VS IMPOSTOR LEGACY)
-  // BPM 200 -> 300 ms por beat. Fase 1 = defeat1, fase 2 = defeat2, fase 3 = defeat3 (retro).
-  static inline var PHASE2_BEAT:Int = 68; // Defeat Fade (20.4 s)
-  static inline var RETRO_BEAT:Int = 292; // entra el retro (87.6 s)
-  static inline var RETURN_BEAT:Int = 360; // sale del retro y vuelve a la fase 2 (108.0 s)
+  static inline var PHASE2_BEAT:Int = 68;
+  static inline var RETRO_BEAT:Int = 292;
+  static inline var RETURN_BEAT:Int = 360;
 
-  // Fade de aparicion de los props nuevos de defeat2 (el del original).
   static inline var FADE_IN_TIME:Float = 0.7;
 
-  // "GradienteAdd" (iluminao omaga, Add) ya estaba visible desde el inicio en el original (alpha 0.6) y sube a 0.7 con el Defeat Fade.
   static inline var LIGHT_PROP:String = 'GradienteAdd';
   static inline var LIGHT_PHASE1_ALPHA:Float = 0.6;
   static inline var LIGHT_PHASE2_ALPHA:Float = 0.7;
 
-  // Nombres de los props en el JSON del stage.
   static inline var PULSE_PROP:String = 'fondo';
   static inline var GLOW_TOP_PROP:String = 'GradienteArriba';
   static inline var GLOW_BOTTOM_PROP:String = 'GradienteAbajo';
 
-  // Valores del pulso, los del original. Si el pulso te parece lento, baja los tiempos.
   static inline var BEAT_INTERVAL:Int = 4;
   static inline var PULSE_REST_ALPHA:Float = 0.4;
   static inline var GLOW_REST_ALPHA:Float = 0.6;
@@ -50,26 +46,35 @@ class VoidStage extends Stage
   static inline var PULSE_SCALE_X:Float = 1.375;
   static inline var PULSE_SCALE_Y:Float = 1.25;
 
-  // Escribe una linea en el log en cada pulso. Ponlo en false cuando ya funcione.
   static inline var PULSE_DEBUG_LOG:Bool = true;
-  // Movimiento de cámara al cantar (como NightmareVision): la cámara se desplaza hacia la flecha del personaje
-  // al que sigue y vuelve cuando termina la animación. 20 es el valor por defecto del original (camDisplacement).
   static inline var NOTE_CAM_ENABLED:Bool = true;
   static inline var NOTE_CAM_DISPLACEMENT:Float = 20;
-  // A quién sigue la cámara en cada momento, sacado de mustHitSection del chart de NightmareVision
-  // (0 = oponente/dad, 1 = jugador/bf). Cada entrada vale desde su tiempo (ms) hasta la siguiente.
   var camTurnTimes:Array<Float> = [0, 4800, 9600, 14400, 20400, 25200, 30000, 34800, 39600, 44400, 49200, 54000, 58800, 63600, 68400, 73200, 78000, 82800, 87600, 92400, 97200, 102000, 108000, 112800, 117600, 122400, 127200, 132000, 136800, 141600, 146400, 223200];
   var camTurnFlags:Array<Int> = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
   var noteCamActive:Bool = false;
 
-  // <<< FASES DEL STAGE "void" Y PULSO POR BEAT
+  static inline var POPUPS_ENABLED:Bool = true;
+  static inline var POPUP_Z:Int = 900;
+  static inline var RATING_POP:Float = 0.785 / 0.7;
+  static inline var COMBO_POP:Float = 0.6 / 0.5;
+  static inline var RATING_BOX_W:Float = 179;
+  static inline var RATING_BOX_H:Float = 66;
+  static inline var RATING_CX:Float = 1037.5;
+  static inline var RATING_CY:Float = 102;
+  static inline var COMBO_BOX:Float = 38;
+  static inline var COMBO_CX0:Float = 1007;
+  static inline var COMBO_PITCH:Float = 29;
+  static inline var COMBO_CY:Float = 152;
+  static inline var MIN_DIGITS:Int = 3;
+  static inline var POPUP_TWEEN_TIME:Float = 0.5;
+  var popRating = null;
+  var popNums:Array<Dynamic> = [];
 
   var ps:PlayState;
   var sequenceStarted:Bool = false;
   var allowFinalDeath:Bool = false;
   var dadSceneAnim:String = 'idle';
 
-  // Fases y pulso.
   var currentPhase:Int = 0;
   var pulse = null;
   var fondoNegro = null;
@@ -82,13 +87,10 @@ class VoidStage extends Stage
   var scaleCaptured:Bool = false;
   var warnedFlashing:Bool = false;
 
-  // Props que no estaban en la fase 1 (aparecen con fade en la fase 2).
   var exclusiveNames:Array<String> = ['basura', 'props1', 'props2', 'subtract', 'GradienteArriba', 'GradienteAbajo'];
   var exclusiveProps:Array<Dynamic> = [];
   var exclusiveFull:Array<Float> = [];
 
-  // Valores de la fase 1 (los del JSON) de los props compartidos y de los personajes, para volver a ellos al reintentar.
-  // Props: [x, y, alpha, scrollX, scrollY, zIndex]. Personajes: [zIndex, x, y, focoX, focoY].
   var negroSnap:Array<Float> = null;
   var fondoSnap:Array<Float> = null;
   var fondoBlend = null;
@@ -105,16 +107,14 @@ class VoidStage extends Stage
   {
     super.onCreate(event);
 
-    // Fases y pulso: buscar los props (ya existen, super.onCreate construyó el stage) y dejar la fase 1.
     bindProps();
     currentPhase = 0;
     applyPhase(1);
+    resetPopups();
 
-    // Código original del stage.
     GameOverSubState.musicSuffix = '-defeat';
     GameOverSubState.blueBallSuffix = '-defeat';
 
-    // Preparar la secuencia de muerte.
     ps = PlayState.instance;
     sequenceStarted = false;
     allowFinalDeath = false;
@@ -125,7 +125,6 @@ class VoidStage extends Stage
   {
     super.onNoteGhostMiss(event);
 
-    // Código original: cancelar las ghost misses.
     event.cancel();
     event.stopPropagation();
   }
@@ -134,13 +133,10 @@ class VoidStage extends Stage
   {
     super.onGameOver(event);
 
-    // >>> EMPIEZA LO NUEVO
-    // Siempre trabajar con el PlayState actual (ps puede ser uno viejo/destruido).
     ps = PlayState.instance;
 
     if (allowFinalDeath)
     {
-      // Restaurar el HUD antes del Game Over real; protegido por si la cámara ya no es válida.
       try
       {
         if (ps != null && ps.camHUD != null)
@@ -148,12 +144,13 @@ class VoidStage extends Stage
       }
       catch (e:Dynamic)
       {
-        trace('[Defeat2] camHUD.alpha falló en onGameOver: ' + e);
       }
 
       return;
     }
-    // <<< TERMINA LO NUEVO
+
+    if (currentPhase == 3 && !sequenceStarted)
+      return;
 
     if (sequenceStarted)
     {
@@ -161,7 +158,6 @@ class VoidStage extends Stage
       return;
     }
 
-    // Evitar que el Game Over normal interrumpa la escena.
     event.cancel();
     sequenceStarted = true;
 
@@ -171,10 +167,8 @@ class VoidStage extends Stage
     ps.isPlayerDying = true;
     ps.isInCutscene = true;
 
-    // Enfocar a GF y aplicar el zoom.
     focusCameraOnGFAndZoom();
 
-    // Mantener al oponente en idle hasta su animación de muerte.
     if (ps.currentStage != null)
     {
       var dad = ps.currentStage.getDad();
@@ -186,36 +180,29 @@ class VoidStage extends Stage
       }
     }
 
-    // >>> EMPIEZA LO NUEVO
-    // Cada llamada de audio va protegida: el "Null Object Reference" salía en ps.vocals.resume()
-    // (línea 117 de tu versión). Si algún sonido del grupo de voces no es válido, ya no rompe la secuencia.
-    // Desvanecer la música instrumental.
     if (FlxG.sound.music != null)
     {
-      try { FlxG.sound.music.onComplete = function() {}; } catch (e:Dynamic) { trace('[Defeat2] music.onComplete falló: ' + e); }
-      try { FlxG.sound.music.resume(); } catch (e:Dynamic) { trace('[Defeat2] music.resume falló: ' + e); }
+      try { FlxG.sound.music.onComplete = function() {}; } catch (e:Dynamic) { }
+      try { FlxG.sound.music.resume(); } catch (e:Dynamic) { }
 
       try
       {
         FlxTween.tween(FlxG.sound.music, {volume: 0}, FADE_TIME, {ease: FlxEase.linear});
       }
-      catch (e:Dynamic) { trace('[Defeat2] fade música falló: ' + e); }
+      catch (e:Dynamic) { }
     }
 
-    // Desvanecer las voces.
     if (ps.vocals != null)
     {
-      try { ps.vocals.resume(); } catch (e:Dynamic) { trace('[Defeat2] vocals.resume falló: ' + e); }
+      try { ps.vocals.resume(); } catch (e:Dynamic) { }
 
       try
       {
         FlxTween.tween(ps.vocals, {playerVolume: 0, opponentVolume: 0}, FADE_TIME, {ease: FlxEase.linear});
       }
-      catch (e:Dynamic) { trace('[Defeat2] fade voces falló: ' + e); }
+      catch (e:Dynamic) { }
     }
-    // <<< TERMINA LO NUEVO
 
-    // Ocultar el HUD durante la escena.
     if (ps.camHUD != null)
     {
       FlxTween.tween(
@@ -226,19 +213,14 @@ class VoidStage extends Stage
       );
     }
 
-    // Sonido inicial de la secuencia.
     FunkinSound.playOnce(Paths.sound('defeat_prekill_sfx'));
 
-    // Pausar el audio cuando termine el fundido.
     new FlxTimer().start(FADE_TIME, function(_)
     {
-      // >>> EMPIEZA LO NUEVO
-      try { if (FlxG.sound.music != null) FlxG.sound.music.pause(); } catch (e:Dynamic) { trace('[Defeat2] music.pause falló: ' + e); }
-      try { if (ps != null && ps.vocals != null) ps.vocals.pause(); } catch (e:Dynamic) { trace('[Defeat2] vocals.pause falló: ' + e); }
-      // <<< TERMINA LO NUEVO
+      try { if (FlxG.sound.music != null) FlxG.sound.music.pause(); } catch (e:Dynamic) { }
+      try { if (ps != null && ps.vocals != null) ps.vocals.pause(); } catch (e:Dynamic) { }
     });
 
-    // Primera animación de muerte del oponente.
     new FlxTimer().start(0.22, function(_)
     {
       if (ps == null || ps.currentStage == null)
@@ -252,7 +234,6 @@ class VoidStage extends Stage
         dad.playAnimation('kill', true);
     });
 
-    // Segunda animación de muerte.
     new FlxTimer().start(1.80, function(_)
     {
       if (ps == null || ps.currentStage == null)
@@ -266,7 +247,6 @@ class VoidStage extends Stage
         dad.playAnimation('kill2', true);
     });
 
-    // Al terminar la escena, permitir el Game Over normal.
     new FlxTimer().start(SCENE_DURATION, function(_)
     {
       if (ps == null)
@@ -276,6 +256,28 @@ class VoidStage extends Stage
       ps.isInCutscene = false;
       ps.isPlayerDying = false;
     });
+  }
+
+  override function onCountdownStart(event):Void
+  {
+    super.onCountdownStart(event);
+    resetPopups();
+
+    try
+    {
+      ps = PlayState.instance;
+      if (ps == null || ps.currentStage == null) return;
+
+      var gf = ps.currentStage.getGirlfriend();
+      if (gf == null) return;
+
+      ps.cancelCameraFollowTween();
+      ps.cameraFollowPoint.setPosition(gf.cameraFocusPoint.x, gf.cameraFocusPoint.y);
+      ps.resetCamera(false, true, true);
+    }
+    catch (e:Dynamic)
+    {
+    }
   }
 
   function focusCameraOnGFAndZoom():Void
@@ -311,7 +313,6 @@ class VoidStage extends Stage
   {
     super.onSongEvent(event);
 
-    // Evitar que eventos de la canción interfieran con la escena.
     if (sequenceStarted && !allowFinalDeath)
       event.cancel();
   }
@@ -319,10 +320,8 @@ class VoidStage extends Stage
   override function onSongRetry(event):Void
   {
     super.onSongRetry(event);
+    resetPopups();
 
-    // >>> EMPIEZA LO NUEVO
-    // Tras reintentar, PlayState es una instancia nueva: la referencia vieja (ps) apunta a una
-    // cámara destruida, de ahí el "Invalid access to field alpha". Se refresca y se protege cada acceso.
     ps = PlayState.instance;
 
     sequenceStarted = false;
@@ -352,7 +351,6 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Defeat2] restaurar estado en onSongRetry falló: ' + e);
     }
 
     try
@@ -365,19 +363,142 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Defeat2] restaurar música en onSongRetry falló: ' + e);
     }
-    // <<< TERMINA LO NUEVO
 
-    // Fases y pulso: volver a la fase 1.
     resetStageState();
 
-    // Conservar la configuración original y adicional.
+    try
+    {
+      if (ps != null && ps.currentStage != null)
+      {
+        var gf = ps.currentStage.getGirlfriend();
+        if (gf != null) ps.cameraFollowPoint.setPosition(gf.cameraFocusPoint.x, gf.cameraFocusPoint.y);
+      }
+    }
+    catch (e:Dynamic)
+    {
+    }
+
     GameOverSubState.musicSuffix = '-defeat';
     GameOverSubState.blueBallSuffix = '-defeat';
   }
 
-  // >>> FASES DEL STAGE "void" Y PULSO POR BEAT
+  function resetPopups():Void
+  {
+    popRating = null;
+    popNums = [];
+  }
+
+  override function onNoteHit(event):Void
+  {
+    super.onNoteHit(event);
+
+    if (!POPUPS_ENABLED) return;
+
+    try
+    {
+      var p = PlayState.instance;
+      if (p == null) return;
+
+      if (p.comboPopUps != null) p.comboPopUps.visible = false;
+
+      var note = event.note;
+      if (note == null || note.noteData == null || !note.noteData.getMustHitNote()) return;
+      if (!note.scoreable) return;
+
+      var judgement:String = event.judgement;
+      if (judgement == null || judgement == 'miss') return;
+
+      showOriginalPopup(p, judgement, event.comboCount);
+    }
+    catch (e:Dynamic)
+    {
+    }
+  }
+
+  function popupStyle()
+  {
+    var p = PlayState.instance;
+    var id:String = (p != null && p.currentChart != null) ? p.currentChart.noteStyle : '';
+    return NoteStyleRegistry.instance.fetchEntry(id);
+  }
+
+  function dropPopup(spr):Void
+  {
+    if (spr == null) return;
+    try
+    {
+      FlxTween.cancelTweensOf(spr);
+      FlxTween.cancelTweensOf(spr.scale);
+      spr.visible = false;
+      PlayState.instance.remove(spr, true);
+      spr.destroy();
+    }
+    catch (e:Dynamic) {}
+  }
+
+  function placePopup(p, spr, cx:Float, cy:Float, boxW:Float, boxH:Float, pop:Float, stepSeconds:Float):Void
+  {
+    spr.cameras = [p.camHUD];
+    spr.zIndex = POPUP_Z;
+    spr.scrollFactor.set(0, 0);
+    spr.alpha = 1;
+    spr.acceleration.set(0, 0);
+    spr.velocity.set(0, 0);
+
+    var fw:Float = spr.frameWidth;
+    var fh:Float = spr.frameHeight;
+    var fit:Float = Math.min(boxW / fw, boxH / fh);
+
+    spr.scale.set(1, 1);
+    spr.updateHitbox();
+    spr.x = cx - fw / 2;
+    spr.y = cy - fh / 2;
+
+    spr.scale.set(fit * pop, fit * pop);
+
+    p.add(spr);
+
+    FlxTween.tween(spr.scale, {x: fit, y: fit}, POPUP_TWEEN_TIME, {ease: FlxEase.expoOut});
+    FlxTween.tween(spr, {alpha: 0}, POPUP_TWEEN_TIME, {startDelay: stepSeconds, ease: FlxEase.expoOut});
+  }
+
+  function showOriginalPopup(p, judgement:String, combo:Int):Void
+  {
+    var style = popupStyle();
+    if (style == null) return;
+
+    var stepSeconds:Float = Conductor.instance.stepLengthMs * 0.01;
+
+    dropPopup(popRating);
+    popRating = style.buildJudgementSprite(judgement);
+    if (popRating != null)
+    {
+      placePopup(p, popRating, RATING_CX, RATING_CY, RATING_BOX_W, RATING_BOX_H, RATING_POP, stepSeconds);
+    }
+
+    for (num in popNums) dropPopup(num);
+    popNums = [];
+
+    var digits:Array<Int> = [];
+    var n:Int = combo;
+    while (n > 0)
+    {
+      digits.unshift(n % 10);
+      n = Math.floor(n / 10);
+    }
+    while (digits.length < MIN_DIGITS) digits.unshift(0);
+
+    for (i in 0...digits.length)
+    {
+      var num = style.buildComboNumSprite(digits[i]);
+      if (num == null) continue;
+
+      placePopup(p, num, COMBO_CX0 + COMBO_PITCH * i, COMBO_CY, COMBO_BOX, COMBO_BOX, COMBO_POP, stepSeconds);
+      popNums.push(num);
+    }
+  }
+
   override function addCharacter(character:BaseCharacter, charType:CharacterType):Void
   {
     super.addCharacter(character, charType);
@@ -385,15 +506,12 @@ class VoidStage extends Stage
     var key:String = characterKey(character);
     if (key == null) return;
 
-    // Fase 1: el motor ya dejó el personaje y su foco de cámara bien (al crear y en resetStage); no se toca.
     if (currentPhase <= 1) return;
 
-    // Personaje que entra a mitad de la canción (cambio de personaje): recibe los valores de la fase actual.
     placeCharacter(character, charValues(currentPhase, key));
     refresh();
   }
 
-  // Desplazamiento según la animación actual (singUP/DOWN/LEFT/RIGHT y sus -hold; los miss no mueven).
   function singDisplacement(character, out:Array<Float>):Void
   {
     out[0] = 0;
@@ -422,7 +540,6 @@ class VoidStage extends Stage
       return;
     }
 
-    // Personaje seguido según el turno del chart original (mustHitSection).
     var dad = p.currentStage.getDad();
     var bf = p.currentStage.getBoyfriend();
     var pos:Float = Conductor.instance.songPosition;
@@ -453,7 +570,6 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Void] cámara por nota falló: ' + e);
     }
   }
 
@@ -461,7 +577,6 @@ class VoidStage extends Stage
   {
     super.onBeatHit(event);
 
-    // Si algo falla (por ejemplo, props ya destruidos tras un reintento), se registra y se vuelven a buscar los props.
     try
     {
       var target:Int = phaseForBeat(event.beat);
@@ -471,8 +586,7 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Void] falló en el beat ' + event.beat + ': ' + e);
-      try { bindProps(); } catch (e2:Dynamic) { trace('[Void] volver a buscar los props falló: ' + e2); }
+      try { bindProps(); } catch (e2:Dynamic) { }
     }
   }
 
@@ -493,7 +607,6 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Void] pausar los tweens falló: ' + e);
     }
   }
 
@@ -514,11 +627,9 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Void] reanudar los tweens falló: ' + e);
     }
   }
 
-  // Fase segun el beat: 1 = defeat1, 2 = defeat2, 3 = retro (defeat3). Despues del retro vuelve a la 2.
   function phaseForBeat(beat:Int):Int
   {
     if (beat >= RETURN_BEAT) return 2;
@@ -527,17 +638,14 @@ class VoidStage extends Stage
     return 1;
   }
 
-  // Alpha "completo" de cada prop exclusivo de defeat2 (los mismos valores del JSON).
   function fullAlpha(name:String):Float
   {
     if (name == 'GradienteArriba' || name == 'GradienteAbajo') return 0.6;
     return 1;
   }
 
-  // Valores de los personajes por fase: [offsetCamaraX, offsetCamaraY, zIndex]. La posición x/y ya NO se toca: sale del JSON del stage.
   function charValues(phase:Int, key:String):Array<Float>
   {
-    // Fase 1: mismos valores que void.json (cámara bf [-300,0], dad [300,0]; z bf 1, dad 2, gf 100).
     if (phase <= 1)
     {
       if (key == 'bf') return [-300, 0, 1];
@@ -593,7 +701,6 @@ class VoidStage extends Stage
       baseScaleY = pulse.scale.y;
     }
 
-    // Valores de la fase 1 (los del JSON), solo la primera vez.
     if (fondoNegro != null && negroSnap == null)
     {
       negroSnap = [fondoNegro.x, fondoNegro.y, fondoNegro.alpha, fondoNegro.scrollFactor.x, fondoNegro.scrollFactor.y, fondoNegro.zIndex];
@@ -604,24 +711,17 @@ class VoidStage extends Stage
       fondoSnap = [pulse.x, pulse.y, pulse.alpha, pulse.scrollFactor.x, pulse.scrollFactor.y, pulse.zIndex];
       fondoBlend = pulse.blend;
     }
-
-    trace('[Void] props encontrados -> fondonegro: ' + (fondoNegro != null) + ', fondo: ' + (pulse != null) + ', glowrojo: ' + (glowRojo != null) + ', ' + LIGHT_PROP + ': ' + (lightAdd != null) + ', exclusivos de defeat2: ' + exclusiveProps.length + ' de ' + exclusiveNames.length);
   }
 
-  // Cambia de fase. Los cambios de valores son instantaneos; solo los props nuevos de defeat2 aparecen con fade.
   function applyPhase(newPhase:Int):Void
   {
     var previous:Int = currentPhase;
     if (newPhase == previous) return;
     currentPhase = newPhase;
 
-    trace('[Void] fase ' + newPhase + ' (antes: ' + previous + ')');
-
-    // fondonegro y fondo (ya existian en defeat1).
     if (newPhase == 1) restoreSharedProps();
     else applyDefeat2Shared(newPhase == 2);
 
-    // Props exclusivos de defeat2.
     for (i in 0...exclusiveProps.length)
     {
       var prop = exclusiveProps[i];
@@ -633,18 +733,15 @@ class VoidStage extends Stage
       }
       else if (previous == 1)
       {
-        // Props nuevos: aparecen con el fade del original.
         prop.alpha = 0;
         FlxTween.tween(prop, {alpha: exclusiveFull[i]}, FADE_IN_TIME, {ease: FlxEase.quadInOut});
       }
       else
       {
-        // Al volver del retro, como en el original, aparecen de golpe.
         prop.alpha = exclusiveFull[i];
       }
     }
 
-    // GradienteAdd: visible desde el inicio (0.6), sube a 0.7 en la fase 2 y se apaga en el retro. Cambia de golpe.
     if (lightAdd != null)
     {
       FlxTween.cancelTweensOf(lightAdd, ['alpha']);
@@ -654,17 +751,14 @@ class VoidStage extends Stage
       else lightAdd.alpha = 0;
     }
 
-    // glowrojo solo se ve en la parte retro.
     if (glowRojo != null)
     {
       FlxTween.cancelTweensOf(glowRojo, ['alpha']);
       glowRojo.alpha = (newPhase == 3) ? 1 : 0;
     }
 
-    // Personajes.
     if (newPhase == 1)
     {
-      // Fase 1: el motor (resetStage) ya restauró posición y foco de cámara; solo se devuelve el zIndex.
       setZ(getBoyfriend(), charValues(1, 'bf'));
       setZ(getDad(), charValues(1, 'dad'));
       setZ(getGirlfriend(), charValues(1, 'gf'));
@@ -676,11 +770,9 @@ class VoidStage extends Stage
       placeCharacter(getGirlfriend(), charValues(newPhase, 'gf'));
     }
 
-    // Reordenar por zIndex.
     refresh();
   }
 
-  // Fase 1: fondonegro y fondo vuelven a los valores del JSON.
   function restoreSharedProps():Void
   {
     if (fondoNegro != null && negroSnap != null)
@@ -707,7 +799,6 @@ class VoidStage extends Stage
     }
   }
 
-  // Fases 2 y 3: valores de defeat2 para fondonegro y fondo (en la fase 3, fondo se oculta y fondonegro no cambia).
   function applyDefeat2Shared(showFondo:Bool):Void
   {
     if (fondoNegro != null)
@@ -732,7 +823,6 @@ class VoidStage extends Stage
     }
   }
 
-  // Solo zIndex y offset de cámara: la posición del personaje la define el JSON del stage y no se cambia.
   function placeCharacter(character, v:Array<Float>):Void
   {
     if (character == null || v == null) return;
@@ -759,12 +849,9 @@ class VoidStage extends Stage
     character.cameraFocusPoint.y = snap[4];
   }
 
-  // Pulso por beat. Solo pulsan los elementos que ya son visibles (como en el original).
   function pulseOnBeat(beat:Int):Void
   {
     var flashing:Bool = flashingEnabled();
-
-    if (PULSE_DEBUG_LOG) trace('[Void] pulso en el beat ' + beat + ' (fase ' + currentPhase + ', flashing: ' + flashing + ')');
 
     if (pulse != null && pulse.alpha > 0.01) pulseBackground(flashing);
     if (glowTop != null && glowTop.alpha > 0.01) pulseGlow(glowTop, flashing);
@@ -773,7 +860,6 @@ class VoidStage extends Stage
 
   function pulseBackground(flashing:Bool):Void
   {
-    // Se cancela por objeto y propiedad (como hace recordingStudio.hxc) en vez de guardar el tween.
     FlxTween.cancelTweensOf(pulse, ['alpha']);
     pulse.alpha = flashing ? 0.5 : 0.45;
     FlxTween.tween(pulse, {alpha: PULSE_REST_ALPHA}, flashing ? PULSE_ALPHA_TIME : PULSE_ALPHA_TIME / 2, {ease: FlxEase.bounceOut});
@@ -793,7 +879,6 @@ class VoidStage extends Stage
     FlxTween.tween(glow, {alpha: GLOW_REST_ALPHA}, GLOW_TIME, {ease: FlxEase.bounceOut});
   }
 
-  // Reintentar la canción: cancelar los tweens y volver a la fase 1.
   function resetStageState():Void
   {
     try
@@ -806,11 +891,9 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      trace('[Void] volver a la fase 1 falló: ' + e);
     }
   }
 
-  // Opción "luces parpadeantes" del jugador. Si no existe con este nombre en tu versión, asume que está activada.
   function flashingEnabled():Bool
   {
     var value = null;
@@ -824,11 +907,9 @@ class VoidStage extends Stage
       if (!warnedFlashing)
       {
         warnedFlashing = true;
-        trace('[Void] Preferences.flashingLights no existe en esta versión, asumo flashing activado');
       }
     }
 
     return value != false;
   }
-  // <<< FASES DEL STAGE "void" Y PULSO POR BEAT
 }

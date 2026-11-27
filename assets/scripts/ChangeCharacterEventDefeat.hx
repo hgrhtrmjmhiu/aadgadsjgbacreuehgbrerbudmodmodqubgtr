@@ -12,9 +12,7 @@ class ChangeCharacterEventDefeat extends SongEvent
   var firstGF:String;
   var firstDad:String;
   var originalsCaptured:Bool = false;
-  // >>> EMPIEZA LO NUEVO
   var cacheOwner:PlayState = null;
-  // <<< TERMINA LO NUEVO
 
   public function new()
   {
@@ -26,30 +24,20 @@ class ChangeCharacterEventDefeat extends SongEvent
     return 'Change Character [Defeat Port]';
   }
 
-  // >>> EMPIEZA LO NUEVO
-  // El evento sobrevive entre partidas, pero los personajes cacheados pertenecen al PlayState/stage
-  // anterior (que se destruye al reiniciar desde Game Over, etc.). Reusarlos = sprites destruidos en el
-  // stage nuevo = crash nativo. Si el PlayState cambió, se descarta el cache y lo capturado.
   function resetCacheIfNewPlayState():Void
   {
     if (cacheOwner == PlayState.instance) return;
 
-    trace('[ChangeCharacterEvent] PlayState nuevo detectado: se limpia el cache de personajes.');
     characterCache = new StringMap();
     originalsCaptured = false;
     cacheOwner = PlayState.instance;
   }
-  // <<< TERMINA LO NUEVO
 
   override function handleEvent(data:SongEventData):Void
   {
-    trace('[ChangeCharacterEvent] Evento disparado!');
-
     if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
-    // >>> EMPIEZA LO NUEVO
     resetCacheIfNewPlayState();
-    // <<< TERMINA LO NUEVO
 
     captureOriginalsIfNeeded();
 
@@ -58,15 +46,12 @@ class ChangeCharacterEventDefeat extends SongEvent
     var daX:Float = data.getFloat('x') ?? 0;
     var daY:Float = data.getFloat('y') ?? 0;
 
-    trace('[ChangeCharacterEvent] role=' + role + ' newChar=' + newChar);
-
     try
     {
       changeCharacter(role, newChar, daX, daY);
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] Error al cambiar personaje: ' + e);
     }
   }
 
@@ -85,25 +70,17 @@ class ChangeCharacterEventDefeat extends SongEvent
   {
     super.onSongRetry(event);
 
-    // >>> EMPIEZA LO NUEVO
     resetCacheIfNewPlayState();
-    // <<< TERMINA LO NUEVO
 
     if (!originalsCaptured) return;
     if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
-    trace('[ChangeCharacterEvent] Restaurando personajes originales tras reintentar.');
-
-    // >>> EMPIEZA LO NUEVO
-    // Cada restauración va en su propio try/catch: si falla una (por ejemplo gf),
-    // las otras dos igual se restauran.
     try
     {
       if (firstBF != null) changeCharacter('bf', firstBF, 0, 0);
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] Error al restaurar bf: ' + e);
     }
 
     try
@@ -112,7 +89,6 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] Error al restaurar gf: ' + e);
     }
 
     try
@@ -121,9 +97,7 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] Error al restaurar dad: ' + e);
     }
-    // <<< TERMINA LO NUEVO
   }
 
   override function getEventSchema()
@@ -192,12 +166,10 @@ class ChangeCharacterEventDefeat extends SongEvent
         PlayState.instance.currentStage.add(cachedChar);
       }
 
-      trace('[ChangeCharacterEvent] Reutilizando personaje cacheado: ' + charID);
       return cachedChar;
     }
 
     var char:BaseCharacter = CharacterDataParser.fetchCharacter(charID);
-    trace('[ChangeCharacterEvent] fetchCharacter(' + charID + ') devolvió: ' + char);
     if (char == null) return null;
 
     char.visible = false;
@@ -218,7 +190,6 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] getBaseScale() falló para "' + charID + '": ' + e + ' — usando 1 como fallback.');
       scale = 1;
     }
     return scale;
@@ -232,14 +203,9 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] setScale() falló para "' + charID + '": ' + e);
     }
   }
 
-  // >>> EMPIEZA LO NUEVO
-  // El error de HTML5 ("Cannot read properties of null (reading 'length')") salía en
-  // newCharacter.dance(true). Este helper envuelve esa línea exacta para que, si falla,
-  // se registre en la consola (con el ID del personaje) en vez de reventar todo el evento.
   function safeDance(character:BaseCharacter, charID:String):Void
   {
     try
@@ -248,7 +214,6 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] dance() falló para "' + charID + '": ' + e);
     }
   }
 
@@ -260,13 +225,9 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] initHealthIcon() falló para "' + charID + '": ' + e);
     }
   }
-  // <<< TERMINA LO NUEVO
 
-  // Igual que hace Stage.addCharacter: sin esto originalPosition queda en (0,0) y el foco de cámara
-  // (resetCameraFocusPoint) y el reinicio (resetStage) usan una posición equivocada.
   function finalizeCamera(character:BaseCharacter, stageCharData):Void
   {
     try
@@ -282,7 +243,6 @@ class ChangeCharacterEventDefeat extends SongEvent
     }
     catch (e:Dynamic)
     {
-      trace('[ChangeCharacterEvent] finalizeCamera() falló: ' + e);
     }
   }
 
@@ -328,14 +288,10 @@ class ChangeCharacterEventDefeat extends SongEvent
         newCharacter.alpha = 1;
         newCharacter.active = true;
         newCharacter.characterType = CharacterType.BF;
-        // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.dance(true);)
         safeDance(newCharacter, newChar);
-        // <<< TERMINA LO NUEVO
         finalizeCamera(newCharacter, charactersData != null ? charactersData.bf : null);
         PlayState.instance.currentStage.characters.set('bf', newCharacter);
-        // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.initHealthIcon(false);)
         safeInitHealthIcon(newCharacter, newChar, false);
-        // <<< TERMINA LO NUEVO
 
       case 'dad':
         var oldDad = PlayState.instance.currentStage.getDad();
@@ -370,14 +326,10 @@ class ChangeCharacterEventDefeat extends SongEvent
         newCharacter.alpha = 1;
         newCharacter.active = true;
         newCharacter.characterType = CharacterType.DAD;
-        // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.dance(true);)
         safeDance(newCharacter, newChar);
-        // <<< TERMINA LO NUEVO
         finalizeCamera(newCharacter, charactersData != null ? charactersData.dad : null);
         PlayState.instance.currentStage.characters.set('dad', newCharacter);
-        // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.initHealthIcon(true);)
         safeInitHealthIcon(newCharacter, newChar, true);
-        // <<< TERMINA LO NUEVO
 
       case 'gf':
         var oldGF = PlayState.instance.currentStage.getGirlfriend();
@@ -412,9 +364,7 @@ class ChangeCharacterEventDefeat extends SongEvent
         newCharacter.alpha = 1;
         newCharacter.active = true;
         newCharacter.characterType = CharacterType.GF;
-        // >>> EMPIEZA LO NUEVO (reemplaza: newCharacter.dance(true);)
         safeDance(newCharacter, newChar);
-        // <<< TERMINA LO NUEVO
         finalizeCamera(newCharacter, charactersData != null ? charactersData.gf : null);
         PlayState.instance.currentStage.characters.set('gf', newCharacter);
     }
