@@ -70,7 +70,7 @@ class DefeatSongScript extends Song
       postUpdateFn = function() { try { pauseHook(); } catch (err:Dynamic) {} };
       FlxG.signals.postUpdate.add(postUpdateFn);
     }
-    catch (err:Dynamic) { }
+    catch (err:Dynamic) {}
 
     touchMenu = TOUCH_ON_DESKTOP;
     try { if (FlxG.onMobile) touchMenu = true; }
@@ -84,6 +84,7 @@ class DefeatSongScript extends Song
     if (ps.iconP2 != null) ps.iconP2.visible = false;
 
     missText = new FlxText(ps.healthBarBG.x, ps.healthBarBG.y + 13, ps.healthBarBG.width, "Score: 0 | Misses: 0/" + maxMisses, 22);
+
     missText.setFormat(Paths.font("vcr.ttf"), 22, 0xFFFF0000, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
     missText.borderColor = 0xFF000000;
     missText.borderSize = 2;
@@ -99,24 +100,21 @@ class DefeatSongScript extends Song
   static inline var PAUSE_PORTRAIT:String = 'menu/pause/black';
   static inline var PAUSE_GLOW:String = 'menu/pause/backGlow';
   static inline var PAUSE_GLOW_COLOR:Int = 0xFFFF0000;
+
   static inline var PAUSE_SCROLL_SOUND:String = 'hover';
   static inline var PAUSE_SCROLL_VOLUME:Float = 0.5;
+
   static inline var TOUCH_ON_DESKTOP:Bool = false;
   static inline var PAUSE_TITLE:String = 'Defeat';
   static inline var PAUSE_CREDITS:String = 'Composer: Rareblin\nCharter: Orbyy';
 
   var pauseDecorated = null;
-  var pauseTries:Int = 0;
   var pauseSub = null;
   var pauseBgSprite = null;
   var pauseMenuGroup = null;
   var menuTexts:Array<FlxText> = [];
   var menuSig:String = '';
   var menuSel:Int = 0;
-  var hideErrLogged:Bool = false;
-  var menuNotFoundLogged:Bool = false;
-  var menuRunLogged:Bool = false;
-  var menuDbg:Int = 0;
   var menuPrevSel:Int = -1;
   var touchMenu:Bool = false;
   var touchDelay:Float = 0;
@@ -139,8 +137,6 @@ class DefeatSongScript extends Song
     menuPrevSel = -1;
     touchDelay = 0.3;
     touchGroupMoved = false;
-    menuDbg = 0;
-    pauseTries = 0;
     pauseActive = true;
   }
 
@@ -178,10 +174,10 @@ class DefeatSongScript extends Song
       pauseDecorated = sub;
 
       try { FlxG.sound.play(Paths.sound('panelAppear'), 0.5); }
-      catch (e:Dynamic) { }
+      catch (e:Dynamic) {}
 
       try { decoratePauseSubState(sub); }
-      catch (e:Dynamic) { }
+      catch (e:Dynamic) {}
     }
     else
     {
@@ -240,7 +236,6 @@ class DefeatSongScript extends Song
       }
       catch (e:Dynamic)
       {
-        if (!hideErrLogged) { hideErrLogged = true; }
       }
     }
   }
@@ -251,6 +246,7 @@ class DefeatSongScript extends Song
   function decoratePauseSubState(sub):Void
   {
     pauseSub = sub;
+
     hideVSliceMetadata(sub);
     try { updateCustomMenu(sub); } catch (e:Dynamic) {}
 
@@ -331,12 +327,11 @@ class DefeatSongScript extends Song
 
     pauseTitle = title;
     pauseCredits = credits;
+    placePracticeText();
   }
-
 
   function updateCustomMenu(sub):Void
   {
-    if (!menuRunLogged) { menuRunLogged = true; }
     var e:Float = FlxG.elapsed;
     if (e != e || e <= 0 || e > 0.1) e = 0.016;
     var k:Float = Math.min(e * 15.6, 1);
@@ -366,6 +361,7 @@ class DefeatSongScript extends Song
           if (t != null && t != 'null')
           {
             pauseMenuGroup = m;
+
             break;
           }
         }
@@ -381,7 +377,6 @@ class DefeatSongScript extends Song
 
       if (pauseMenuGroup == null)
       {
-        if (!menuNotFoundLogged) { menuNotFoundLogged = true; }
         return;
       }
     }
@@ -438,11 +433,6 @@ class DefeatSongScript extends Song
       o.visible = true;
       o.x = o.x + ((isSel ? 75 : 55) - o.x) * k;
       o.alpha = o.alpha + ((isSel ? 1 : 0.3) - o.alpha) * k;
-
-      if (i == 0 && menuDbg < 12)
-      {
-        menuDbg++;
-      }
     }
   }
 
@@ -484,7 +474,7 @@ class DefeatSongScript extends Song
         if (i == menuSel) sub.currentMenuEntries[sub.currentEntry].callback(sub);
         else sub.changeSelection(i - menuSel);
       }
-      catch (err:Dynamic) { }
+      catch (err:Dynamic) {}
       break;
     }
   }
@@ -498,10 +488,10 @@ class DefeatSongScript extends Song
         if (snd != null && snd != FlxG.sound.music && snd.playing && snd.time < 150 && snd.length < 3000 && Math.abs(snd.volume - 0.4) < 0.011) snd.stop();
       }
     }
-    catch (e:Dynamic) { }
+    catch (e:Dynamic) {}
 
     try { FlxG.sound.play(Paths.sound(PAUSE_SCROLL_SOUND), PAUSE_SCROLL_VOLUME); }
-    catch (e:Dynamic) { }
+    catch (e:Dynamic) {}
   }
 
   function updatePauseExtras():Void
@@ -518,8 +508,25 @@ class DefeatSongScript extends Song
 
     hideVSliceMetadata(pauseSub);
     try { updateCustomMenu(pauseSub); }
-    catch (e:Dynamic) { if (!hideErrLogged) { hideErrLogged = true; } }
-    if (practiceText != null) practiceText.visible = p.isPracticeMode;
+    catch (e:Dynamic) {}
+    if (practiceText != null)
+    {
+      practiceText.visible = p.isPracticeMode;
+      placePracticeText();
+    }
+  }
+
+  function placePracticeText():Void
+  {
+    if (practiceText == null || pauseCredits == null) return;
+
+    var lines:Int = 3;
+    var h:Float = pauseCredits.height;
+    var lineH:Float = h / lines;
+
+    if (!(lineH > 15) || lineH > 60) lineH = 29;
+
+    practiceText.y = pauseCredits.y + lineH * lines;
   }
 
   function fixHudBop():Void
@@ -553,6 +560,7 @@ class DefeatSongScript extends Song
     }
 
     if (misses > maxMisses && !alreadyKilled)
+
     {
       alreadyKilled = true;
       ps.health = -1;
