@@ -334,7 +334,7 @@
     "char": "bf",
     "newchar": "bf",
     "x": 0,
-    "y": 0
+    "y": -50
    }
   },
   {
@@ -344,7 +344,7 @@
     "char": "dad",
     "newchar": "blackold",
     "x": 0,
-    "y": 0
+    "y": -50
    }
   },
   {

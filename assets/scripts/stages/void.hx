@@ -46,9 +46,9 @@ class VoidStage extends Stage
   static inline var PULSE_SCALE_X:Float = 1.375;
   static inline var PULSE_SCALE_Y:Float = 1.25;
 
-  static inline var PULSE_DEBUG_LOG:Bool = true;
   static inline var NOTE_CAM_ENABLED:Bool = true;
   static inline var NOTE_CAM_DISPLACEMENT:Float = 20;
+
   var camTurnTimes:Array<Float> = [0, 4800, 9600, 14400, 20400, 25200, 30000, 34800, 39600, 44400, 49200, 54000, 58800, 63600, 68400, 73200, 78000, 82800, 87600, 92400, 97200, 102000, 108000, 112800, 117600, 122400, 127200, 132000, 136800, 141600, 146400, 223200];
   var camTurnFlags:Array<Int> = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
   var noteCamActive:Bool = false;
@@ -57,10 +57,12 @@ class VoidStage extends Stage
   static inline var POPUP_Z:Int = 900;
   static inline var RATING_POP:Float = 0.785 / 0.7;
   static inline var COMBO_POP:Float = 0.6 / 0.5;
+
   static inline var RATING_BOX_W:Float = 179;
   static inline var RATING_BOX_H:Float = 66;
   static inline var RATING_CX:Float = 1037.5;
   static inline var RATING_CY:Float = 102;
+
   static inline var COMBO_BOX:Float = 38;
   static inline var COMBO_CX0:Float = 1007;
   static inline var COMBO_PITCH:Float = 29;
@@ -182,25 +184,25 @@ class VoidStage extends Stage
 
     if (FlxG.sound.music != null)
     {
-      try { FlxG.sound.music.onComplete = function() {}; } catch (e:Dynamic) { }
-      try { FlxG.sound.music.resume(); } catch (e:Dynamic) { }
+      try { FlxG.sound.music.onComplete = function() {}; } catch (e:Dynamic) {}
+      try { FlxG.sound.music.resume(); } catch (e:Dynamic) {}
 
       try
       {
         FlxTween.tween(FlxG.sound.music, {volume: 0}, FADE_TIME, {ease: FlxEase.linear});
       }
-      catch (e:Dynamic) { }
+      catch (e:Dynamic) {}
     }
 
     if (ps.vocals != null)
     {
-      try { ps.vocals.resume(); } catch (e:Dynamic) { }
+      try { ps.vocals.resume(); } catch (e:Dynamic) {}
 
       try
       {
         FlxTween.tween(ps.vocals, {playerVolume: 0, opponentVolume: 0}, FADE_TIME, {ease: FlxEase.linear});
       }
-      catch (e:Dynamic) { }
+      catch (e:Dynamic) {}
     }
 
     if (ps.camHUD != null)
@@ -217,8 +219,8 @@ class VoidStage extends Stage
 
     new FlxTimer().start(FADE_TIME, function(_)
     {
-      try { if (FlxG.sound.music != null) FlxG.sound.music.pause(); } catch (e:Dynamic) { }
-      try { if (ps != null && ps.vocals != null) ps.vocals.pause(); } catch (e:Dynamic) { }
+      try { if (FlxG.sound.music != null) FlxG.sound.music.pause(); } catch (e:Dynamic) {}
+      try { if (ps != null && ps.vocals != null) ps.vocals.pause(); } catch (e:Dynamic) {}
     });
 
     new FlxTimer().start(0.22, function(_)
@@ -586,7 +588,7 @@ class VoidStage extends Stage
     }
     catch (e:Dynamic)
     {
-      try { bindProps(); } catch (e2:Dynamic) { }
+      try { bindProps(); } catch (e2:Dynamic) {}
     }
   }
 
@@ -814,8 +816,8 @@ class VoidStage extends Stage
       FlxTween.cancelTweensOf(pulse.scale);
       pulse.scale.set(baseScaleX, baseScaleY);
 
-      pulse.x = -1520;
-      pulse.y = -202;
+      pulse.x = -1428;
+      pulse.y = -188.5;
       pulse.scrollFactor.set(0.8, 0.8);
       pulse.blend = BlendMode.NORMAL;
       pulse.zIndex = 10;

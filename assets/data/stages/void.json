@@ -12,21 +12,24 @@
             ],
             "scale": 4,
             "startingAnimation": "",
-            "zIndex": 1
+            "zIndex": -2
         },
         {
-            "alpha": 0.8,
+            "alpha": 0.4,
             "assetPath": "void/defeatpulse",
             "atlasSettings": null,
-            "blend": "add",
             "name": "fondo",
             "position": [
-                -1475,
-                -287
+                -1428,
+                -188.5
             ],
             "scale": 4,
+            "scroll": [
+                0.8,
+                0.8
+            ],
             "startingAnimation": "",
-            "zIndex": 10
+            "zIndex": -1
         },
         {
             "assetPath": "void/idontknwo",
@@ -168,8 +171,8 @@
             "atlasSettings": null,
             "name": "glowrojo",
             "position": [
-                -444,
-                -181
+                -351,
+                -263
             ],
             "scale": 2,
             "startingAnimation": "",
